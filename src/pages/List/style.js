@@ -48,13 +48,13 @@ const Container = styled.div`
         background-color: var(--Grayscale-10);
         z-index: 1;
 
-        li {
+        .list-main-li {
           width: 79px;
           padding: 6px 16px;
           color: var(--Grayscale-50);
         }
 
-        li:hover {
+        .list-main-li:hover {
           color: var(--Blue-50);
         }
       }
@@ -88,22 +88,24 @@ const Container = styled.div`
       background-color: var(--Grayscale-10);
       transition: all 0.5s;
       transform: translateY(${props => props.y}px);
+      cursor: pointer;
 
       .card-profile {
         display: flex;
         flex-direction: column;
         gap: 12px;
 
-        img {
+        .card-profile-img {
           width: 60px;
           height: 60px;
           border-radius: 100%;
         }
 
-        h2 {
+        .card-profile-h2 {
           font-size: 2rem;
           font-weight: 400;
           line-height: 25px;
+          color: var(--Grayscale-60);
         }
       }
 
@@ -111,17 +113,17 @@ const Container = styled.div`
         display: flex;
         justify-content: space-between;
 
-        h3 {
+        .card-questions-h3 {
           color: var(--Grayscale-40);
           font-size: 1.4rem;
         }
 
-        div {
+        .card-questions-div {
           display: flex;
           gap: 4px;
           align-items: center;
 
-          img {
+          .card-questions-img {
             width: 18px;
             height: 18px;
           }

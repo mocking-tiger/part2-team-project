@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Container from './style';
 import GoToAnswer from '../../components/GoToAnswer';
@@ -17,6 +18,7 @@ const List = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
+    // 카드정보 호출
     async function fetchData() {
       const response = await fetch(
         `https://openmind-api.vercel.app/3-5/subjects/?limit=${subjects.count ?? 999}&offset=0`,
@@ -29,9 +31,12 @@ const List = () => {
     fetchData();
   }, []);
 
-  function handleSorting(e) {
+  if (!cardInfo) {
+    return null;
+  }
+
+  const handleSorting = e => {
     // 정렬기능
-    setSortBy(e.target.innerHTML);
     const selectedSort = e.target.innerHTML;
     if (selectedSort === '이름순') {
       setCardInfo(
@@ -46,26 +51,29 @@ const List = () => {
     }
 
     setSortBy(selectedSort);
-  }
+  };
 
-  function handlePageChange(e) {
+  const handlePageChange = e => {
+    // 페이지이동
     setCurrentPage(Number(e.target.innerHTML));
     setTranslateY((Number(e.target.innerHTML) - 1) * -414);
-  }
+  };
 
-  function goToPrev() {
+  const goToPrev = () => {
+    // 이전 페이지리스트
     if (currentScroll > 1) {
       setTranslateX(translateX + 200);
       setCurrentScroll(currentScroll - 1);
     }
-  }
+  };
 
-  function goToNext() {
+  const goToNext = () => {
+    // 다음 페이지리스트
     if (currentScroll < Math.ceil(totalPages / 5)) {
       setTranslateX(translateX - 200);
       setCurrentScroll(currentScroll + 1);
     }
-  }
+  };
 
   return (
     <Container x={translateX} y={translateY}>
@@ -91,11 +99,12 @@ const List = () => {
                 ? `/assets/images/arrowDown.svg`
                 : `/assets/images/arrowUp.svg`
             }
-            alt="arrow"
+            alt="정렬버튼 화살표"
           />
           {isDropDown && (
             <div className="list-main-ul-dropdown">
               <li
+                className="list-main-li"
                 onClick={handleSorting}
                 onKeyDown={() => {}}
                 role="presentation"
@@ -103,6 +112,7 @@ const List = () => {
                 이름순
               </li>
               <li
+                className="list-main-li"
                 onClick={handleSorting}
                 onKeyDown={() => {}}
                 role="presentation"
@@ -117,19 +127,29 @@ const List = () => {
       <section className="list-section">
         {cardInfo.map(item => {
           return (
-            <article className="list-section-card" key={item.id}>
-              <div className="card-profile">
-                <img src={item.imageSource} alt="profile" />
-                <h2>{item.name}</h2>
-              </div>
-              <div className="card-questions">
-                <div>
-                  <img src="/assets/images/messages.svg" alt="message" />
-                  <h3>받은질문</h3>
+            <Link to={`/post/${item.id}`} key={item.id}>
+              <article className="list-section-card">
+                <div className="card-profile">
+                  <img
+                    src={item.imageSource}
+                    alt="프로필사진"
+                    className="card-profile-img"
+                  />
+                  <h2 className="card-profile-h2">{item.name}</h2>
                 </div>
-                <h3>{item.questionCount}개</h3>
-              </div>
-            </article>
+                <div className="card-questions">
+                  <div className="card-questions-div">
+                    <img
+                      src="/assets/images/messages.svg"
+                      alt="메세지아이콘"
+                      className="card-questions-img"
+                    />
+                    <h3 className="card-questions-h3">받은질문</h3>
+                  </div>
+                  <h3 className="card-questions-h3">{item.questionCount}개</h3>
+                </div>
+              </article>
+            </Link>
           );
         })}
       </section>
@@ -137,7 +157,7 @@ const List = () => {
       <nav className="list-nav">
         <div
           className="list-nav-controlbutton"
-          onClick={goToPrev} // 체크포인트
+          onClick={goToPrev}
           onKeyDown={() => {}}
           role="presentation"
         >
